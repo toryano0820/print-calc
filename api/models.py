@@ -10,13 +10,10 @@ class BaseModel(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class Product(BaseModel):
-    name = models.TextField(default="<product name>")
-    price = models.FloatField(default=0.0)
-    currency_symbol = models.CharField(max_length=3)
-
-
 class Discount(BaseModel):
+    class Meta:
+        ordering = ["priority"]
+
     class Conditions(models.TextChoices):
         PRICE_GREATER_THAN = "PGT", translate("Price >")
         PRICE_LESS_THAN = "PLT", translate("Price <")
@@ -31,7 +28,6 @@ class Discount(BaseModel):
         PERCENT = "PCT", translate("Discount %")
         PRICE = "PRC", translate("New price per unit")
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     condition = models.CharField(
         max_length=3,
         choices=Conditions.choices
@@ -43,6 +39,20 @@ class Discount(BaseModel):
         default=Type.PRICE
     )
     discount_value = models.FloatField(default=0)
+    priority = models.IntegerField()
+
+    def __str__(self):
+        return self.Conditions(self.condition).label + " " + str(self.test_value)
+
+
+class Product(BaseModel):
+    name = models.TextField(default="<product name>")
+    price = models.FloatField(default=0.0)
+    currency_symbol = models.CharField(max_length=3)
+    discounts = models.ManyToManyField(Discount, default=[])
+
+    def __str__(self):
+        return self.name
 
 
 class Order(BaseModel):
