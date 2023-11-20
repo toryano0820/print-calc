@@ -1,0 +1,13 @@
+[
+    {
+        "model": "api.product",
+        "pk": 1,
+        "fields": {
+            "created_at": "2023-11-15T17:43:27.187354Z",
+            "updated_at": "2023-11-15T18:02:50.641846Z",
+            "name": "A4 Print",
+            "price": 3.0,
+            "currency_symbol": "PHP"
+        }
+    }
+]
